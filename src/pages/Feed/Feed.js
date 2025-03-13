@@ -241,7 +241,7 @@ class Feed extends Component {
     })
       .then((res) => res.json())
       .then((resData) => {
-        let imageUrl = "undefined";
+        let imageUrl = this.state.editPost.imageUrl;
 
         if (resData.filePath !== undefined) {
           imageUrl = resData.filePath.replace(/\\/g, "/");
@@ -324,13 +324,11 @@ class Feed extends Component {
       })
       .then((resData) => {
         if (resData.errors && resData.errors[0].status === 422) {
-          throw new Error(
-            "Validation failed. Make sure the email address isn't used yet!"
-          );
+          throw new Error("Validation failed");
         }
 
         if (resData.errors) {
-          throw new Error(`Editing post failed!`);
+          throw new Error(resData.errors[0].message);
         }
 
         console.log(resData);
@@ -426,10 +424,6 @@ class Feed extends Component {
         return res.json();
       })
       .then((resData) => {
-        if (resData.errors && resData.errors[0].status === 422) {
-          throw new Error("Delete post failed!");
-        }
-
         if (resData.errors) {
           throw new Error(`${resData.errors[0].message}`);
         }
